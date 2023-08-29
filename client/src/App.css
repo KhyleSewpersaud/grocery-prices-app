@@ -1,0 +1,38 @@
+body {
+  background-color: #3C6255;
+}
+
+img {
+  width: 100px;
+}
+
+h1 {
+  display: flex;
+  justify-content: center;
+  color: #EAE7B1;
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+form {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 4em;
+}
+
+input {
+  font-size: 2rem;
+}
+
+h2 {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0rem;
+  color: #A6BB8D;
+}
+
+.results {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
