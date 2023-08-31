@@ -14,6 +14,7 @@ function App() {
     )
   }
 
+
   return (
     <div>
       <h1>Grocery Price Comparison</h1>
