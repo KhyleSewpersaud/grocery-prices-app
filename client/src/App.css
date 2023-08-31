@@ -27,7 +27,7 @@ input {
 h2 {
   display: flex;
   justify-content: center;
-  margin-bottom: 0rem;
+  margin-bottom: 1rem;
   color: #A6BB8D;
 }
 
@@ -35,4 +35,25 @@ h2 {
   display: flex;
   justify-content: center;
   gap: 20px;
+}
+
+.no-frills {
+  background-color: #CECE5A;
+}
+
+.metro {
+  background-color: #FF6969;
+}
+
+.loblaws {
+  background-color: #F3AA60;
+}
+
+.food-basics {
+  background-color: #96C291;
+}
+
+.store {
+  border-radius: 0.5rem;
+  padding: 0.5rem;
 }
