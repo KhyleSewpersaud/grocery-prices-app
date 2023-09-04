@@ -1,17 +1,22 @@
 import "./App.css";
 import { useState } from "react";
+import axios from 'axios';
 
 function App() {
   const [search, setSearch] = useState("");
 
   async function query(e) {
     e.preventDefault();
-    fetch('http://localhost:3001/searches', {
-      method: 'POST', 
-      body: JSON.stringify({search}),
-      headers: {'Content-Type': 'application/json'}
-    }
-    )
+      // await fetch('http://localhost:4040/searches', {
+      //   method: 'POST', 
+      //   body: JSON.stringify({search}),
+      //   headers: {'Content-Type': 'application/json'}
+      // })
+    axios.post('http://localhost:4040/searches', {
+      body: JSON.stringify({search})
+    }).then(response => {
+      console.log(response)
+    })
   }
 
 
