@@ -14,6 +14,8 @@ mongoose.connect(
   process.env.MONGO_URL
 );
 
+let lastItem;
+
 app.post("/searches", (req, res) => {
     const search = JSON.stringify(req.body)
     const searchDoc = Search.create({
@@ -22,9 +24,14 @@ app.post("/searches", (req, res) => {
     res.json(search)
 });
 
-app.get("/test", (req, res) => {
-    res.json('get')
+app.get("/searchesGet", async (req, res) => {
+    await mongoose.connect(process.env.MONGO_URL);
+    const searchesGet = await Search.find({});
+    res.json(searchesGet)
 })
+
+
+
 
 // async function nofrills() {
 //     const browser = await puppeteer.launch();

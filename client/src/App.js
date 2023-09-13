@@ -1,24 +1,42 @@
 import "./App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from 'axios';
 
 function App() {
   const [search, setSearch] = useState("");
+  let lastSearch;
 
   async function query(e) {
-    e.preventDefault();
-      // await fetch('http://localhost:4040/searches', {
-      //   method: 'POST', 
-      //   body: JSON.stringify({search}),
-      //   headers: {'Content-Type': 'application/json'}
-      // })
     axios.post('http://localhost:4040/searches', {
-      body: JSON.stringify({search})
+      body: JSON.stringify(search)
     }).then(response => {
       console.log(response)
     })
   }
 
+
+  useEffect(() => {
+    axios.get('http://localhost:4040/searchesGet')
+    .then(response => {
+      lastSearch = JSON.parse(response.data[response.data.length-1].search).body
+      console.log(lastSearch)
+    })
+  }, [])
+
+  // useEffect(() => {
+  //   axios.post('http://localhost:4040/lastSearch', {
+  //     body: lastSearch
+  //   }).then(response => {
+  //     console.log(response)
+  //   })
+  // })
+
+  // const nofrills = async () => {
+  //   const browser = await puppeteer.launch();
+  //   const page = await browser.newPage();
+  //   await page.goto(url+lastSearch)
+  //   browser.close();
+  // }
 
   return (
     <div>
