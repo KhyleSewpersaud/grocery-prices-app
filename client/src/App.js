@@ -7,7 +7,7 @@ function App() {
   let lastSearch;
 
   async function query(e) {
-    axios.post('http://localhost:4040/searches', {
+    await axios.post('http://localhost:4040/searches', {
       body: JSON.stringify(search)
     }).then(response => {
       console.log(response)
@@ -21,22 +21,7 @@ function App() {
       lastSearch = JSON.parse(response.data[response.data.length-1].search).body
       console.log(lastSearch)
     })
-  }, [])
-
-  // useEffect(() => {
-  //   axios.post('http://localhost:4040/lastSearch', {
-  //     body: lastSearch
-  //   }).then(response => {
-  //     console.log(response)
-  //   })
-  // })
-
-  // const nofrills = async () => {
-  //   const browser = await puppeteer.launch();
-  //   const page = await browser.newPage();
-  //   await page.goto(url+lastSearch)
-  //   browser.close();
-  // }
+  })
 
   return (
     <div>
@@ -68,13 +53,7 @@ function App() {
         </div>
         <div className="loblaws store">
           <h4>Loblaws</h4>
-          <img src="https://assets.epicurious.com/photos/62f16ed5fe4be95d5a460eed/3:2/w_6948,h_4632,c_limit/RoastChicken_RECIPE_080420_37993.jpg" />
-          <p>Chicken</p>
-          <h5>$100</h5>
-        </div>
-        <div className="food-basics store">
-          <h4>Food Basics</h4>
-          <img src="https://assets.epicurious.com/photos/62f16ed5fe4be95d5a460eed/3:2/w_6948,h_4632,c_limit/RoastChicken_RECIPE_080420_37993.jpg" />
+          <img src="https://assets.shop.loblaws.ca/products/21340952/b1/en/front/21340952_front_a01.png" />
           <p>Chicken</p>
           <h5>$100</h5>
         </div>
