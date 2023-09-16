@@ -21,7 +21,7 @@ function App() {
       lastSearch = JSON.parse(response.data[response.data.length-1].search).body
       console.log(lastSearch)
     })
-  })
+  }, [])
 
   return (
     <div>
@@ -47,7 +47,7 @@ function App() {
         </div>
         <div className="metro store">
           <h4>Metro</h4>
-          <img src="https://assets.epicurious.com/photos/62f16ed5fe4be95d5a460eed/3:2/w_6948,h_4632,c_limit/RoastChicken_RECIPE_080420_37993.jpg" />
+          <img src="https://product-images.metro.ca/images/ha5/h5e/8874225205278.jpg" />
           <p>Chicken</p>
           <h5>$100</h5>
         </div>
