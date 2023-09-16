@@ -1,12 +1,11 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const puppeteer = require("puppeteer");
 const mongoose = require("mongoose");
 const Search = require("./models/Search");
+const Data = require("./models/Data")
 require('dotenv').config();
 const request = require('request-promise');
-const fs = require('fs')
 const cheerio = require('cheerio')
 
 
@@ -35,14 +34,24 @@ app.get("/searchesGet", async (req, res) => {
     lastSearch = (JSON.parse(searchesGet[searchesGet.length - 1].search).body).replace(/^"(.*)"$/, '$1')
     console.log(lastSearch)
 
-    //metroRequester(lastSearch);
-    nofrillsRequester(lastSearch);
+    const a = await metroRequester(lastSearch);
+    const b = await walmartRequester(lastSearch);
 
-    res.json(searchesGet)
+    console.log(a)
+    console.log(b)
+
+
+    const responseData = {
+      metroData: a,
+      walmartData: b
+    };
+
+    console.log(responseData)
+    res.json(responseData)
 })
 
-function metroRequester(lastSearch) {
-    request('http://api.scraperapi.com/?api_key='+process.env.API_KEY+'&url=https://www.metro.ca/en/online-grocery/search?filter='+lastSearch)
+async function metroRequester(lastSearch) {
+    await request('http://api.scraperapi.com/?api_key='+process.env.API_KEY+'&url=https://www.metro.ca/en/online-grocery/search?filter='+lastSearch)
     .then(response => {
         const htmlString = response;
         const $ = cheerio.load(htmlString);
@@ -54,27 +63,65 @@ function metroRequester(lastSearch) {
 
         const picElement = $('.pt__visual .defaultable-picture img')
         const picData = picElement.attr('src');
+        
         console.log(nameData, priceData, picData)
+        return ([nameData, priceData, picData])
     })
     .catch(error => {
         console.log(error)
     })
 }
 
-function nofrillsRequester(lastSearch) {
-    request('http://api.scraperapi.com/?api_key='+process.env.API_KEY+'&url=https://www.loblaws.ca/search?search-bar='+lastSearch)
+async function walmartRequester(lastSearch) {
+    await request('http://api.scraperapi.com/?api_key='+process.env.API_KEY+'&url=https://www.walmart.ca/search?q='+lastSearch+'&c=10019')
     .then(response => {
         const htmlString = response;
         const $ = cheerio.load(htmlString);
-        const nameElement = $('.product-name__item--name')
+        const nameElement = $('.css-1p4va6y')
         const nameData = nameElement.first().text();
 
-        const priceElement = $('.selling-price-list__item__price--now-price__value')
-        const priceData = priceElement.first().text();
+        const priceElement = $('.css-2vqe5n')
+        const priceData = priceElement.text();
 
-        const picElement = $('.product-tile__thumbnail__image .responsive-image img')
+        const picElement = $('.css-19q6667')
         const picData = picElement.attr('src');
+
+        // const dataDoc = new Data({
+        //     name: nameData,
+        //     price: priceData,
+        //     pic: picData
+        // })
+        // dataDoc.save()
+
         console.log(nameData, priceData, picData)
+        return ([nameData, priceData, picData])
+    })
+    .catch(error => {
+        console.log(error)
+    })
+}
+
+function foodbasicsRequester(lastSearch) {
+    request('http://api.scraperapi.com/?api_key='+process.env.API_KEY+'&url=https://www.ubereats.com/store/food-basics-33-barrack-st/S9NeyIOtXBWy1zRJuozR-A?diningMode=DELIVERY&storeSearchQuery='+lastSearch)
+    .then(response => {
+        fs.writeFile('here.txt', response, (err) => {
+            if (err) {
+                console.log('bad');
+            } else {
+                console.log('good');
+            }
+        })
+        // const htmlString = response;
+        // const $ = cheerio.load(htmlString);
+        // const nameElement = $('span[${}]')
+        // const nameData = nameElement.first().text();
+
+        // const priceElement = $('.rj j2 rk be bf bg bh b1')
+        // const priceData = priceElement.first().text();
+
+        // const picElement = $('picture .jj r7 br rt dq ru rv rw')
+        // const picData = picElement.attr('src');
+        // console.log(nameData, priceData, picData)
     })
     .catch(error => {
         console.log(error)

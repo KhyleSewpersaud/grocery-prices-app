@@ -4,28 +4,35 @@ import axios from 'axios';
 
 function App() {
   const [search, setSearch] = useState("");
-  let lastSearch;
 
   async function query(e) {
+    e.preventDefault()
     await axios.post('http://localhost:4040/searches', {
       body: JSON.stringify(search)
     }).then(response => {
+      loadData()
       console.log(response)
     })
   }
 
+  // useEffect(() => {
+  //   axios.get('http://localhost:4040/searchesGet')
+  //   .then(response => {
+  //     console.log('ran ' + response.data.metroData)
+  //   })
+  // }, [])
 
-  useEffect(() => {
-    axios.get('http://localhost:4040/searchesGet')
+  async function loadData() {
+    await axios.get('http://localhost:4040/searchesGet')
     .then(response => {
-      lastSearch = JSON.parse(response.data[response.data.length-1].search).body
-      console.log(lastSearch)
+      console.log('ran ' + response.data.metroData)
     })
-  }, [])
+  }
+
 
   return (
     <div>
-      <h1>Grocery Price Comparison</h1>
+      <h1>Grocery Store Steals</h1>
 
       <form onSubmit={query}>
         <input
