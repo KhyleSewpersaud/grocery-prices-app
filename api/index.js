@@ -7,7 +7,7 @@ const Data = require("./models/Data")
 require('dotenv').config();
 const request = require('request-promise');
 const cheerio = require('cheerio')
-
+const fs = require('fs')
 
 app.use(cors());
 app.use(express.json());
@@ -36,14 +36,17 @@ app.get("/searchesGet", async (req, res) => {
 
     const a = await metroRequester(lastSearch);
     const b = await walmartRequester(lastSearch);
+    const c = await amazonRequester(lastSearch)
 
     console.log(a)
     console.log(b)
+    console.log(c)
 
 
     const responseData = {
       metroData: a,
-      walmartData: b
+      walmartData: b,
+      amazonData: c
     };
 
     console.log(responseData)
@@ -101,27 +104,29 @@ async function walmartRequester(lastSearch) {
     })
 }
 
-function foodbasicsRequester(lastSearch) {
-    request('http://api.scraperapi.com/?api_key='+process.env.API_KEY+'&url=https://www.ubereats.com/store/food-basics-33-barrack-st/S9NeyIOtXBWy1zRJuozR-A?diningMode=DELIVERY&storeSearchQuery='+lastSearch)
+async function amazonRequester(lastSearch) {
+    request('http://api.scraperapi.com/?api_key='+process.env.API_KEY+'&url=https://www.amazon.ca/s?k=' + lastSearch + '&i=grocery&crid=3YIBEC56BNGA&sprefix=s%2Cgrocery%2C84&ref=nb_sb_ss_ts-doa-p_1_1')
     .then(response => {
-        fs.writeFile('here.txt', response, (err) => {
-            if (err) {
-                console.log('bad');
-            } else {
-                console.log('good');
-            }
-        })
-        // const htmlString = response;
-        // const $ = cheerio.load(htmlString);
-        // const nameElement = $('span[${}]')
-        // const nameData = nameElement.first().text();
+        // fs.writeFile('here.txt', response, (err) => {
+        //     if (err) {
+        //         console.log('bad');
+        //     } else {
+        //         console.log('good');
+        //     }
+        // })
+        const htmlString = response;
+        const $ = cheerio.load(htmlString);
+        const nameElement = $('.a-size-base-plus')
+        const nameData = nameElement.first().text();
 
-        // const priceElement = $('.rj j2 rk be bf bg bh b1')
-        // const priceData = priceElement.first().text();
+        const priceElement = $('.a-price-whole')
+        const priceData = priceElement.first().text();
 
-        // const picElement = $('picture .jj r7 br rt dq ru rv rw')
-        // const picData = picElement.attr('src');
-        // console.log(nameData, priceData, picData)
+        const picElement = $('.sg-col-4-of-24 .s-image')
+        const picData = picElement.attr('src');
+
+        console.log(nameData, priceData, picData)
+        return ([nameData, priceData, picData])
     })
     .catch(error => {
         console.log(error)
