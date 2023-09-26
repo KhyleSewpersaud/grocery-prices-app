@@ -37,20 +37,16 @@ h2 {
   gap: 20px;
 }
 
-.no-frills {
-  background-color: #CECE5A;
+.walmart {
+  background-color: #004c91;
 }
 
 .metro {
   background-color: #FF6969;
 }
 
-.loblaws {
+.amazon {
   background-color: #F3AA60;
-}
-
-.food-basics {
-  background-color: #96C291;
 }
 
 .store {

@@ -25,7 +25,7 @@ function App() {
   async function loadData() {
     await axios.get('http://localhost:4040/searchesGet')
     .then(response => {
-      console.log('ran ' + response.data.metroData)
+      console.log('ran')
     })
   }
 
@@ -46,8 +46,8 @@ function App() {
 
       <h2>Recent Searches</h2>
       <div className="results">
-        <div className="no-frills store">
-          <h4>No Frills</h4>
+        <div className="walmart store">
+          <h4>Walmart</h4>
           <img src="https://assets.epicurious.com/photos/62f16ed5fe4be95d5a460eed/3:2/w_6948,h_4632,c_limit/RoastChicken_RECIPE_080420_37993.jpg" />
           <p>Chicken</p>
           <h5>$100</h5>
@@ -58,8 +58,8 @@ function App() {
           <p>Chicken</p>
           <h5>$100</h5>
         </div>
-        <div className="loblaws store">
-          <h4>Loblaws</h4>
+        <div className="amazon store">
+          <h4>Amazon</h4>
           <img src="https://assets.shop.loblaws.ca/products/21340952/b1/en/front/21340952_front_a01.png" />
           <p>Chicken</p>
           <h5>$100</h5>

@@ -38,10 +38,6 @@ app.get("/searchesGet", async (req, res) => {
     const b = await walmartRequester(lastSearch);
     const c = await amazonRequester(lastSearch)
 
-    console.log(a)
-    console.log(b)
-    console.log(c)
-
 
     const responseData = {
       metroData: a,
@@ -49,7 +45,6 @@ app.get("/searchesGet", async (req, res) => {
       amazonData: c
     };
 
-    console.log(responseData)
     res.json(responseData)
 })
 
@@ -66,6 +61,13 @@ async function metroRequester(lastSearch) {
 
         const picElement = $('.pt__visual .defaultable-picture img')
         const picData = picElement.attr('src');
+
+        const dataDoc = new Data({
+            name: nameData,
+            price: priceData,
+            picture: picData
+        })
+        dataDoc.save()
         
         console.log(nameData, priceData, picData)
         return ([nameData, priceData, picData])
@@ -78,6 +80,14 @@ async function metroRequester(lastSearch) {
 async function walmartRequester(lastSearch) {
     await request('http://api.scraperapi.com/?api_key='+process.env.API_KEY+'&url=https://www.walmart.ca/search?q='+lastSearch+'&c=10019')
     .then(response => {
+        fs.writeFile('here.txt', response, (err) => {
+            if (err) {
+              console.error('Error writing to file:', err);
+            } else {
+              console.log('Data has been written to the file successfully.');
+            }
+          });
+
         const htmlString = response;
         const $ = cheerio.load(htmlString);
         const nameElement = $('.css-1p4va6y')
@@ -89,12 +99,12 @@ async function walmartRequester(lastSearch) {
         const picElement = $('.css-19q6667')
         const picData = picElement.attr('src');
 
-        // const dataDoc = new Data({
-        //     name: nameData,
-        //     price: priceData,
-        //     pic: picData
-        // })
-        // dataDoc.save()
+        const dataDoc = new Data({
+            name: nameData,
+            price: priceData,
+            picture: picData
+        })
+        dataDoc.save()
 
         console.log(nameData, priceData, picData)
         return ([nameData, priceData, picData])
@@ -107,23 +117,26 @@ async function walmartRequester(lastSearch) {
 async function amazonRequester(lastSearch) {
     request('http://api.scraperapi.com/?api_key='+process.env.API_KEY+'&url=https://www.amazon.ca/s?k=' + lastSearch + '&i=grocery&crid=3YIBEC56BNGA&sprefix=s%2Cgrocery%2C84&ref=nb_sb_ss_ts-doa-p_1_1')
     .then(response => {
-        // fs.writeFile('here.txt', response, (err) => {
-        //     if (err) {
-        //         console.log('bad');
-        //     } else {
-        //         console.log('good');
-        //     }
-        // })
         const htmlString = response;
         const $ = cheerio.load(htmlString);
         const nameElement = $('.a-size-base-plus')
         const nameData = nameElement.first().text();
 
         const priceElement = $('.a-price-whole')
-        const priceData = priceElement.first().text();
+        let priceData = priceElement.first().text();
+        const priceElement2 = $('.a-price-fraction')
+        let priceData2 = priceElement2.first().text();
+        priceData = "$"+priceData + priceData2
 
         const picElement = $('.sg-col-4-of-24 .s-image')
         const picData = picElement.attr('src');
+
+        const dataDoc = new Data({
+            name: nameData,
+            price: priceData,
+            picture: picData
+        })
+        dataDoc.save()
 
         console.log(nameData, priceData, picData)
         return ([nameData, priceData, picData])
