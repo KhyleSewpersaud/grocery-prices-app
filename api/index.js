@@ -48,6 +48,14 @@ app.get("/searchesGet", async (req, res) => {
     res.json(responseData)
 })
 
+app.get("/dataGet", async (req, res) => {
+    await mongoose.connect(process.env.MONGO_URL);
+    const dataGet = await Data.find({})
+    const dataGet3 = dataGet.slice(-3)
+    console.log(dataGet3)
+    res.json(dataGet3)
+})
+
 async function metroRequester(lastSearch) {
     await request('http://api.scraperapi.com/?api_key='+process.env.API_KEY+'&url=https://www.metro.ca/en/online-grocery/search?filter='+lastSearch)
     .then(response => {
@@ -63,6 +71,7 @@ async function metroRequester(lastSearch) {
         const picData = picElement.attr('src');
 
         const dataDoc = new Data({
+            company: "Metro",
             name: nameData,
             price: priceData,
             picture: picData
@@ -80,14 +89,6 @@ async function metroRequester(lastSearch) {
 async function walmartRequester(lastSearch) {
     await request('http://api.scraperapi.com/?api_key='+process.env.API_KEY+'&url=https://www.walmart.ca/search?q='+lastSearch+'&c=10019')
     .then(response => {
-        fs.writeFile('here.txt', response, (err) => {
-            if (err) {
-              console.error('Error writing to file:', err);
-            } else {
-              console.log('Data has been written to the file successfully.');
-            }
-          });
-
         const htmlString = response;
         const $ = cheerio.load(htmlString);
         const nameElement = $('.css-1p4va6y')
@@ -100,6 +101,7 @@ async function walmartRequester(lastSearch) {
         const picData = picElement.attr('src');
 
         const dataDoc = new Data({
+            company: "Walmart",
             name: nameData,
             price: priceData,
             picture: picData
@@ -132,6 +134,7 @@ async function amazonRequester(lastSearch) {
         const picData = picElement.attr('src');
 
         const dataDoc = new Data({
+            company: "Amazon",
             name: nameData,
             price: priceData,
             picture: picData

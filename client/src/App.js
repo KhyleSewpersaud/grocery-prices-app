@@ -15,12 +15,12 @@ function App() {
     })
   }
 
-  // useEffect(() => {
-  //   axios.get('http://localhost:4040/searchesGet')
-  //   .then(response => {
-  //     console.log('ran ' + response.data.metroData)
-  //   })
-  // }, [])
+  useEffect(() => {
+    axios.get('http://localhost:4040/dataGet')
+    .then(response => {
+      console.log(response.data)
+    })
+  }, [])
 
   async function loadData() {
     await axios.get('http://localhost:4040/searchesGet')
